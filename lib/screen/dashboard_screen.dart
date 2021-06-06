@@ -13,15 +13,17 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  List<Double> wattList = List<Double>();
-  List<Double> voltageList = List<Double>();
-  List<Double> ampList = List<Double>();
-  List<Double> degreeList = List<Double>();
-  List<Double> batvoltageList = List<Double>();
-  List<String> chargeType = List<String>();
-  List<Double> percentage = List<Double>();
-  Double volt, amp, watt, degree, batvolt, percen;
-  String cahrgeType;
+  List<double> wattList = [];
+  List<double> voltageList = [];
+  List<double> ampList = [];
+  List<double> degreeList = [];
+  List<double> batteryVoltageList = [];
+  List<String> chargeTypeList = [];
+  List<int> percentage = [];
+  double batteryVoltage;
+  int volt, amp, watt, degree;
+  int percent;
+  String chargeType;
 
   Timer timer;
   FirebaseDatabase _firebaseDatabase = FirebaseDatabase.instance;
@@ -56,10 +58,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     await query.onChildAdded.forEach(
       (element) {
         Map<dynamic, dynamic> batValue = element.snapshot.value;
+        print(batValue);
         setState(() {
-          batvolt = batValue["Voltage"];
-          cahrgeType = batValue["Charge_Type"];
-          percen = batValue["Percentage"];
+          batteryVoltage = batValue["Voltage"];
+          chargeType = batValue["Charge_Type"];
+          percent = batValue["Percentage"];
         });
       },
     );
@@ -128,22 +131,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   children: Column(
                     children: [
                       SizedBox(height: 5),
-                      MPTTDataCardWidget(dataValue: "VOLTAGE : $batvolt  V"),
+                      MPTTDataCardWidget(
+                          dataValue: "VOLTAGE : $batteryVoltage  V"),
                       SizedBox(height: 5),
                       MPTTDataCardWidget(
-                          dataValue: "CHARGE TYPE : $cahrgeType "),
+                          dataValue: "CHARGE TYPE : $chargeType "),
                       SizedBox(height: 5),
-                      MPTTDataCardWidget(dataValue: "PERCENTAGE : $percen  %"),
-                    ],
-                  ),
-                ),
-                MPTTDataOverviewCardWidget(
-                  icon: Image.asset("images/solacell.png"),
-                  dataTitle: "SOLAR DEGREES",
-                  children: Column(
-                    children: [
-                      SizedBox(height: 5),
-                      MPTTDataCardWidget(dataValue: "DEGREES : $degree "),
+                      MPTTDataCardWidget(dataValue: "PERCENTAGE : $percent  %"),
                     ],
                   ),
                 ),
